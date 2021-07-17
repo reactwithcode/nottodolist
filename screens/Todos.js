@@ -15,9 +15,14 @@ import {
   Fab,
   Icon,
   AddIcon,
+  MinusIcon,
 } from 'native-base';
 
 import TodoItem from '../components/TodoItem';
+import axios from 'axios';
+import TryRedux from '../components/TryRedux';
+
+import {API_URL} from '../constants';
 
 class Todos extends Component {
   constructor() {
@@ -28,14 +33,14 @@ class Todos extends Component {
     };
   }
 
-  //   UNSAFE_componentWillMount() {
-  //     alert('componentWillMount');
-  //   }
-
-  //   componentDidMount() {
-  //     alert('componentDidMount');
-  //     this.handleIncTodo();
-  //   }
+  componentDidMount() {
+    const self = this; // so that this can be called in callbacl
+    axios.get(`${API_URL}todos/`).then(result => {
+      self.setState({
+        todos: result.data,
+      });
+    });
+  }
 
   render() {
     const {navigate} = this.props.navigation;
