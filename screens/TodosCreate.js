@@ -24,8 +24,10 @@ import {
 } from 'native-base';
 import {event} from 'react-native-reanimated';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import {allTodos} from '../store/actions';
 
-import {API_URL} from '../constants';
+import {API_URL} from '../store/constants';
 
 class TodosCreate extends Component {
   constructor() {
@@ -48,6 +50,8 @@ class TodosCreate extends Component {
           // React Navigation doesn't trigger lifecycle method again in component's objection.
           // solution => make global state management
           goBack();
+          // refetch data before goback() to get newest data
+          this.props.dispatch(allTodos());
         });
     }
   }
@@ -77,4 +81,6 @@ class TodosCreate extends Component {
   }
 }
 
-export default TodosCreate;
+const mapStateToProps = state => ({});
+
+export default connect(mapStateToProps)(TodosCreate);

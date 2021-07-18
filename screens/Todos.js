@@ -19,28 +19,32 @@ import {
 } from 'native-base';
 
 import TodoItem from '../components/TodoItem';
-import axios from 'axios';
-import TryRedux from '../components/TryRedux';
-
-import {API_URL} from '../constants';
+// import TryRedux from '../components/TryRedux';
+import {connect} from 'react-redux';
+import {allTodos} from '../store/actions';
 
 class Todos extends Component {
   constructor() {
     super();
-    this.state = {
-      count: 0,
-      todos: [],
-    };
+    // this.state = {
+    //   count: 0,
+    //   todos: [],
+    // };
   }
 
   componentDidMount() {
-    const self = this; // so that this can be called in callbacl
-    axios.get(`${API_URL}todos/`).then(result => {
-      self.setState({
-        todos: result.data,
-      });
-    });
+    // const self = this; // so that this can be called in callbacl
+    // axios.get(`${API_URL}todos/`).then(result => {
+    //   self.setState({
+    //     todos: result.data,
+    //   });
+    // });
+
+    // 1
+    this.props.dispatch(allTodos());
   }
+
+  _KeyExtractor = (item, index) => item.id;
 
   render() {
     const {navigate} = this.props.navigation;
@@ -61,7 +65,7 @@ class Todos extends Component {
           <Box>
             <List space={2}>
               <FlatList
-                data={this.state.todos}
+                data={this.props.todosReducer.todos}
                 keyExtractor={item => item.id}
                 renderItem={({item}) => <TodoItem todo={item} />}
               />
@@ -87,4 +91,12 @@ class Todos extends Component {
   }
 }
 
-export default Todos;
+// 3
+// function to return obj by props
+const mapStateToProps = state => ({
+  todosReducer: state.todosReducer,
+});
+
+// 2
+// connect: is like trigger action
+export default connect(mapStateToProps)(Todos);

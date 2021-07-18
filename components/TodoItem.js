@@ -19,12 +19,14 @@ import {
 import {StyleSheet} from 'react-native';
 import propTypes from 'prop-types';
 import axios from 'axios';
+import {connect} from 'react-redux';
+import {allTodos} from '../store/actions';
 
 import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
 
-import {API_URL} from '../constants';
+import {API_URL} from '../store/constants';
 
-export default class TodoItem extends Component {
+class TodoItem extends Component {
   state = {
     isDone: false,
   };
@@ -52,8 +54,9 @@ export default class TodoItem extends Component {
     });
   }
 
-  handleDelete(id) {
-    axios.delete(`${API_URL}todos/${id}`);
+  async handleDelete(id) {
+    await axios.delete(`${API_URL}todos/${id}`);
+    this.props.dispatch(allTodos());
   }
 
   render() {
@@ -171,3 +174,7 @@ export default class TodoItem extends Component {
 TodoItem.propTypes = {
   todo: propTypes.object.isRequired,
 };
+
+const mapStateToProps = state => ({});
+
+export default connect(mapStateToProps)(TodoItem);
